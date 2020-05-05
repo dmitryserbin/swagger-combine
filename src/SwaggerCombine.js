@@ -8,9 +8,10 @@ const _ = require('lodash');
 const operationTypes = ['get', 'put', 'post', 'delete', 'options', 'head', 'patch'];
 
 class SwaggerCombine {
-  constructor(config, opts) {
+  constructor(config, opts, bundle) {
     this.config = _.cloneDeep(config);
     this.opts = opts || {};
+    this.bundle = bundle;
     this.apis = [];
     this.schemas = [];
     this.combinedSchema = {};
@@ -37,8 +38,10 @@ class SwaggerCombine {
   }
 
   load() {
-    return $RefParser
-      .dereference(this.config, this.opts)
+    var refParser = this.bundle ? 
+      $RefParser.bundle(this.config, this.opts) : $RefParser.dereference(this.config, this.opts);
+
+    return refParser
       .then(configSchema => {
         this.apis = configSchema.apis || [];
         this.combinedSchema = _.omit(configSchema, 'apis');
@@ -55,9 +58,14 @@ class SwaggerCombine {
               _.set(opts, 'resolve.http.headers.authorization', basicAuth);
             }
 
-            return $RefParser
-              .dereference(api.url, opts)
-              .then(res => SwaggerParser.dereference(res, opts))
+            var apiRefParser = this.bundle ? 
+              $RefParser.bundle(api.url, opts) : $RefParser.dereference(api.url, opts);
+
+            return apiRefParser
+              .then(res => {
+                return this.bundle ? 
+                  SwaggerParser.bundle(res, opts) : SwaggerParser.dereference(res, opts);
+              })
               .catch(err => {
                 if (this.opts.continueOnError) {
                   return;

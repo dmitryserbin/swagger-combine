@@ -9,6 +9,7 @@ function CLI(argv) {
   const config = args._[0];
   const output = args.output || args.o;
   const format = args.format || args.f;
+  const bundle = !!args.bundleSchema;
   const opts = {};
 
   if (args.v) {
@@ -18,7 +19,7 @@ function CLI(argv) {
 
   if (args.h) {
     console.info(
-      'Usage: swagger-combine <config> [-o|--output file] [-f|--format <yaml|json>] [--continueOnError] [--continueOnConflictingPaths] [--includeDefinitions]'
+      'Usage: swagger-combine <config> [-o|--output file] [-f|--format <yaml|json>] [--continueOnError] [--continueOnConflictingPaths] [--includeDefinitions] [--bundleSchema]'
     );
     return;
   }
@@ -37,7 +38,7 @@ function CLI(argv) {
   opts.includeDefinitions = !!args.includeDefinitions;
   opts.useBasePath = !!args.useBasePath;
 
-  return new SwaggerCombine(config, opts)
+  return new SwaggerCombine(config, opts, bundle)
     .combine()
     .then(combinedSchema => {
       if (output) {

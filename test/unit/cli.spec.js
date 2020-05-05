@@ -120,6 +120,14 @@ describe('[Unit] cli.js', () => {
     CLI(['test.json', '--includeDefinitions']);
   });
 
+  it('sets bundleSchema option', done => {
+    combineStub.callsFake(function() {
+      expect(this.bundle).to.be.true;
+      done();
+    });
+    CLI(['test.json', '--bundleSchema']);
+  });
+
   it('sets useBasePath option', done => {
     combineStub.callsFake(function() {
       expect(this.opts.useBasePath).to.be.true;

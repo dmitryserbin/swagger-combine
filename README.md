@@ -8,7 +8,7 @@ Swagger Combine
 [![npm](https://img.shields.io/npm/v/swagger-combine.svg)](https://www.npmjs.com/package/swagger-combine)
 [![Greenkeeper badge](https://badges.greenkeeper.io/maxdome/swagger-combine.svg)](https://greenkeeper.io/)
 
->Combines multiple Swagger schemas into one dereferenced schema.
+> Combines multiple Swagger schemas into one dereferenced schema.
 
 ## Install
 
@@ -157,7 +157,6 @@ apis:
 ```
 
 *All example configurations are located in the `examples` folder.*
-
 
 ### Filtering Paths
 
@@ -361,11 +360,11 @@ The next example equals the simple example above but used an extended configurat
       "url": "http://petstore.swagger.io/v2/swagger.json",
       "paths": {
         "rename": [
-          { 
+          {
             "type": "rename",
             "from": "/pet/{petId}",
             "to": "/pet/alive/{petId}"
-          } 
+          }
         ]
       }
     },
@@ -390,11 +389,11 @@ To change the basePath of all paths a regular expression can be used.
       "url": "http://petstore.swagger.io/v2/swagger.json",
       "paths": {
         "rename": [
-          { 
+          {
             "type": "regex",
             "from": "^\/pet\/(.*)",
             "to": "/pet/alive/$1"
-          } 
+          }
         ]
       }
     },
@@ -419,12 +418,12 @@ const swaggerJson = {
       url: "http://petstore.swagger.io/v2/swagger.json",
       paths: {
         rename: [
-          { 
+          {
             type: "regex",
             from: /\/pet\/(.*)/,
             to: "/pet/alive/$1"
           },
-          { 
+          {
             type: "function",
             to: (path) => path === "/pet/alive/{petId}" ? "/pet/alive/{petAliveId}" : path
           }
@@ -643,7 +642,6 @@ To retrieve Swagger schemas that are access protected, basic auth information (u
 
 For all possible resolve options have a look at the [documentation of json-schema-ref-parser](https://github.com/BigstickCarpet/json-schema-ref-parser/blob/master/docs/options.md#resolve-options).
 
-
 ## API
 
 ### swaggerCombine(config, [options], [callback])
@@ -680,10 +678,13 @@ For all possible resolve options have a look at the [documentation of json-schem
 
     Combine global tags (set on the root level of the schemas) as well.
 
+* **bundleSchema** - `boolean` *(default: false)*
+
+    [Bundles](https://github.com/APIDevTools/json-schema-ref-parser/blob/master/docs/ref-parser.md#bundleschema-options-callback) all referenced files/URLs into a single schema that only has internal $ref pointers.
+
 #### callback `function(err, combinedSchema)` *(optional)*
 
 > Callback with error and the dereferenced and combined schema.
-
 
 ### swaggerCombine.middleware(config, [options])
 
